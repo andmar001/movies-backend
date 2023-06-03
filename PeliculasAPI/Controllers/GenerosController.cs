@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using PeliculasAPI.Entidades;
 using PeliculasAPI.Repositorio;
 using System;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 namespace PeliculasAPI.Controllers
 {
     [Route("api/generos")]
+    [ApiController]
     public class GenerosController : Controller
     {
         private readonly IRepositorio _repositorio;
@@ -22,7 +24,7 @@ namespace PeliculasAPI.Controllers
             return _repositorio.ObtenerTodosLosGeneros();
         }
         [HttpGet("{Id:int}")]
-        public async Task<ActionResult<Genero>> Get(int Id)
+        public async Task<ActionResult<Genero>> Get(int Id, [FromBody] string nombre)
         {
             var genero = await _repositorio.ObtenerGeneroPorId(Id);
 
@@ -30,12 +32,11 @@ namespace PeliculasAPI.Controllers
             {
                 return NotFound();
             }
-
             return genero;
         }
 
         [HttpPost]
-        public ActionResult Post()
+        public ActionResult Post([FromBody]Genero genero)
         {
             return NoContent();
         }

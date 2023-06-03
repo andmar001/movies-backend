@@ -30,8 +30,5 @@ namespace PeliculasAPI.Repositorio
             await Task.Delay(1); //3 seconds to simulate conection con database
             return _generos.FirstOrDefault(o => o.Id == id);
         }
-
-
-
     }
 }
