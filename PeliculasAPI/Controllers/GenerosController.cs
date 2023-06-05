@@ -4,6 +4,7 @@ using PeliculasAPI.Entidades;
 using PeliculasAPI.Repositorio;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace PeliculasAPI.Controllers
@@ -13,18 +14,20 @@ namespace PeliculasAPI.Controllers
     public class GenerosController : Controller
     {
         private readonly IRepositorio _repositorio;
+        private readonly WeatherForecastController _weatherForecastController;
 
-        public GenerosController(IRepositorio repositorio)
+        public GenerosController(IRepositorio repositorio, WeatherForecastController weatherForecastController)
         {
             _repositorio = repositorio;
+            _weatherForecastController = weatherForecastController;
         }
-        [HttpGet]
-        public ActionResult<List<Genero>> GetById()
+        [HttpGet("generos")]
+        public ActionResult<List<Genero>> Generos()
         {
             return _repositorio.ObtenerTodosLosGeneros();
         }
         [HttpGet("{Id:int}")]
-        public async Task<ActionResult<Genero>> Get(int Id, [FromBody] string nombre)
+        public async Task<ActionResult<Genero>> GetById(int Id, [FromBody] string nombre)
         {
             var genero = await _repositorio.ObtenerGeneroPorId(Id);
 
@@ -34,11 +37,20 @@ namespace PeliculasAPI.Controllers
             }
             return genero;
         }
-
+        [HttpGet("guid")]
+        public ActionResult<Guid> GetGuid()
+        {
+            return Ok(new
+            {
+                Guid_GenerosController = _repositorio.ObtenerGuid(),
+                Guid_WeatherController = _weatherForecastController.ObtenerGuidWeatherForecast()
+            });
+        }
         [HttpPost]
         public ActionResult Post([FromBody]Genero genero)
         {
-            return NoContent();
+            _repositorio.CrearGenero(genero);
+            return Ok();
         }
         [HttpPut]
         public ActionResult Put()

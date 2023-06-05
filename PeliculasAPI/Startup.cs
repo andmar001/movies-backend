@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using PeliculasAPI.Controllers;
 using PeliculasAPI.Repositorio;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,8 @@ namespace PeliculasAPI
         public void ConfigureServices(IServiceCollection services)
         {
             //inversión de dependencias
-            services.AddTransient<IRepositorio, RepositorioEnMemoria>();
+            services.AddSingleton<IRepositorio, RepositorioEnMemoria>();
+            services.AddTransient<WeatherForecastController>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

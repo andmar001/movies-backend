@@ -47,5 +47,9 @@ namespace PeliculasAPI.Controllers
         {
             return _repositorio.ObtenerTodosLosGeneros();
         }
+        public Guid ObtenerGuidWeatherForecast()
+        {
+            return _repositorio.ObtenerGuid();
+        }
     }
 }

@@ -20,3 +20,10 @@ Todos los metodos que hereden de un metodo async desde un repositorio deben de s
 
 # ApiController
 nos indica donde se estan produciendo los errores
+
+# Singleton la instancia de la clase es la misma en toda la solucion.
+
+# Scoped dentro del mismo contexto tenemos la misma instancia.
+
+# Transient siempre retorna una instancia diferente en cada ejecución
+
