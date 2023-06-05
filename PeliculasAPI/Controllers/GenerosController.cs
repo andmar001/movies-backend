@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Logging;
 using PeliculasAPI.Entidades;
 using PeliculasAPI.Repositorio;
 using System;
@@ -15,24 +16,32 @@ namespace PeliculasAPI.Controllers
     {
         private readonly IRepositorio _repositorio;
         private readonly WeatherForecastController _weatherForecastController;
+        private readonly ILogger<GenerosController> _loguer;
 
-        public GenerosController(IRepositorio repositorio, WeatherForecastController weatherForecastController)
+        public GenerosController(
+            IRepositorio repositorio, 
+            WeatherForecastController weatherForecastController,
+            ILogger<GenerosController> loguer)
         {
             _repositorio = repositorio;
             _weatherForecastController = weatherForecastController;
+            _loguer = loguer;
         }
         [HttpGet("generos")]
         public ActionResult<List<Genero>> Generos()
         {
+            _loguer.LogInformation("Vamos a ver los generos");
             return _repositorio.ObtenerTodosLosGeneros();
         }
         [HttpGet("{Id:int}")]
-        public async Task<ActionResult<Genero>> GetById(int Id, [FromBody] string nombre)
+        public async Task<ActionResult<Genero>> GetById(int Id, [FromHeader] string nombre)
         {
+            _loguer.LogInformation($"Obtener un género por id{Id}");
             var genero = await _repositorio.ObtenerGeneroPorId(Id);
 
             if (genero == null)
             {
+                _loguer.LogInformation($"No pudimos encontrar el genero de id {Id}");
                 return NotFound();
             }
             return genero;
