@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using PeliculasAPI.Entidades;
@@ -12,6 +14,7 @@ namespace PeliculasAPI.Controllers
 {
     [Route("api/generos")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]//proteccion 401 unauthorized a nivel de controller
     public class GenerosController : Controller
     {
         private readonly IRepositorio _repositorio;
@@ -28,6 +31,8 @@ namespace PeliculasAPI.Controllers
             _loguer = loguer;
         }
         [HttpGet("generos")]
+        //[ResponseCache(Duration =60)]//aplicar filtro de response cache, duracion de 60 seg activo
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<List<Genero>> Generos()
         {
             _loguer.LogInformation("Vamos a ver los generos");

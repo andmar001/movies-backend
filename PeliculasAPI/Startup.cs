@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -30,6 +31,8 @@ namespace PeliculasAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+            services.AddResponseCaching();
             //inversión de dependencias
             services.AddSingleton<IRepositorio, RepositorioEnMemoria>();
             services.AddTransient<WeatherForecastController>();
@@ -91,6 +94,12 @@ namespace PeliculasAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            //middleware para caching
+            app.UseResponseCaching();
+
+            // middleware de autenticación
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
