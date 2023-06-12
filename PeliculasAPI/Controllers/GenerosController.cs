@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using PeliculasAPI.Entidades;
+using PeliculasAPI.Filtros;
 using PeliculasAPI.Repositorio;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,8 @@ namespace PeliculasAPI.Controllers
         }
         [HttpGet("generos")]
         //[ResponseCache(Duration =60)]//aplicar filtro de response cache, duracion de 60 seg activo
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [ServiceFilter(typeof(MiFiltroDeAccion))] // agregar filtros personalizados
         public ActionResult<List<Genero>> Generos()
         {
             _loguer.LogInformation("Vamos a ver los generos");
@@ -46,6 +48,7 @@ namespace PeliculasAPI.Controllers
 
             if (genero == null)
             {
+                throw new ApplicationException($"El género de ID {Id} no fue encontrado");
                 _loguer.LogInformation($"No pudimos encontrar el genero de id {Id}");
                 return NotFound();
             }
