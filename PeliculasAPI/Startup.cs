@@ -31,6 +31,19 @@ namespace PeliculasAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //configuración de CORS
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    var frontendURL = Configuration.GetValue<string>("frontend_url");
+                    //builder.WithOrigins("*")
+                    builder.WithOrigins(frontendURL)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
             //configurar filtro de accion
             services.AddTransient<MiFiltroDeAccion>();
@@ -66,6 +79,9 @@ namespace PeliculasAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            //middleware para uso de CORS
+            app.UseCors();
 
             app.UseAuthentication();
 
