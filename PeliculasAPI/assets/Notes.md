@@ -27,3 +27,9 @@ nos indica donde se estan produciendo los errores
 
 # Transient siempre retorna una instancia diferente en cada ejecución
 
+# Tools libreria para poder hacer uso de comandos como 
+add-migration 
+
+# una vez configurada la conexion a la bd, crearla por medio de los comandos de Tools
+Add-Migration Initial
+Update_Database
