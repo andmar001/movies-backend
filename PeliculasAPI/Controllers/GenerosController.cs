@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PeliculasAPI.DTOs;
 using PeliculasAPI.Entidades;
 using PeliculasAPI.Filtros;
 using System;
@@ -21,19 +23,23 @@ namespace PeliculasAPI.Controllers
     {
         private readonly ILogger<GenerosController> loguer;
         private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
 
         public GenerosController(
                     ILogger<GenerosController> loguer,
-                    ApplicationDbContext context)
+                    ApplicationDbContext context,
+                    IMapper mapper)
         {
             this.loguer = loguer;
             this.context = context;
+            this.mapper = mapper;
         }
         [HttpGet]
         [ServiceFilter(typeof(MiFiltroDeAccion))] // agregar filtros personalizados
-        public async Task<ActionResult<List<Genero>>> Get()
+        public async Task<ActionResult<List<GeneroDTO>>> Get()
         {
-            return await context.Generos.ToListAsync();
+            var generos = await context.Generos.ToListAsync();
+            return mapper.Map<List<GeneroDTO>>(generos);
         }
         [HttpGet("{Id:int}")]
         public async Task<ActionResult<Genero>> GetById(int Id)
@@ -41,8 +47,9 @@ namespace PeliculasAPI.Controllers
             return StatusCode(400);
         }
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody]Genero genero)
+        public async Task<ActionResult> Post([FromBody]GeneroCreacionDTO generoCreacionDTO)
         {
+            var genero = mapper.Map<Genero>(generoCreacionDTO);
             context.Add(genero);
             await context.SaveChangesAsync();
             return NoContent();

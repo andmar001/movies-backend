@@ -33,3 +33,6 @@ add-migration
 # una vez configurada la conexion a la bd, crearla por medio de los comandos de Tools
 Add-Migration Initial
 Update-Database
+
+# Automapper
+paquete - AutoMapper.Extensions.Microsoft.DependencyInjection
