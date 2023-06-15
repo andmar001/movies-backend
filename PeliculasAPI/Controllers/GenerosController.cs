@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PeliculasAPI.Entidades;
 using PeliculasAPI.Filtros;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -17,28 +19,33 @@ namespace PeliculasAPI.Controllers
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]//proteccion 401 unauthorized a nivel de controller
     public class GenerosController : Controller
     {
-        private readonly ILogger<GenerosController> _loguer;
+        private readonly ILogger<GenerosController> loguer;
+        private readonly ApplicationDbContext context;
 
         public GenerosController(
-                    ILogger<GenerosController> loguer)
+                    ILogger<GenerosController> loguer,
+                    ApplicationDbContext context)
         {
-            _loguer = loguer;
+            this.loguer = loguer;
+            this.context = context;
         }
         [HttpGet]
         [ServiceFilter(typeof(MiFiltroDeAccion))] // agregar filtros personalizados
-        public ActionResult<List<Genero>> Generos()
+        public async Task<ActionResult<List<Genero>>> Get()
         {
-            return new List<Genero>() { new Genero() { Id=1, Nombre="Comedia"} };
+            return await context.Generos.ToListAsync();
         }
         [HttpGet("{Id:int}")]
         public async Task<ActionResult<Genero>> GetById(int Id)
         {
-            throw new NotImplementedException();
+            return StatusCode(400);
         }
         [HttpPost]
-        public ActionResult Post([FromBody]Genero genero)
+        public async Task<ActionResult> Post([FromBody]Genero genero)
         {
-            throw new NotImplementedException();
+            context.Add(genero);
+            await context.SaveChangesAsync();
+            return NoContent();
         }
         [HttpPut]
         public ActionResult Put()

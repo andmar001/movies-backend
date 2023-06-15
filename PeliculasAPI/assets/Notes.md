@@ -32,4 +32,4 @@ add-migration
 
 # una vez configurada la conexion a la bd, crearla por medio de los comandos de Tools
 Add-Migration Initial
-Update_Database
+Update-Database
