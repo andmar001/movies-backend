@@ -48,7 +48,8 @@ namespace PeliculasAPI
                     //builder.WithOrigins("*")
                     builder.WithOrigins(frontendURL)
                         .AllowAnyMethod()
-                        .AllowAnyHeader();
+                        .AllowAnyHeader()
+                        .WithExposedHeaders( new string[] { "cantidadTotalRegistros" });//exponer la cabecera usada para hacer la paginación                   
                 });
             });
 

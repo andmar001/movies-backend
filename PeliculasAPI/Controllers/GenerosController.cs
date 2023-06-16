@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using PeliculasAPI.DTOs;
 using PeliculasAPI.Entidades;
 using PeliculasAPI.Filtros;
+using PeliculasAPI.Utilidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,9 +37,13 @@ namespace PeliculasAPI.Controllers
         }
         [HttpGet]
         [ServiceFilter(typeof(MiFiltroDeAccion))] // agregar filtros personalizados
-        public async Task<ActionResult<List<GeneroDTO>>> Get()
+        public async Task<ActionResult<List<GeneroDTO>>> Get([FromQuery]PaginacionDTO paginacionDTO)
         {
-            var generos = await context.Generos.ToListAsync();
+            var queryable = context.Generos.AsQueryable();
+            //contar la cantidad de generos en la BD
+            await HttpContext.InsertarParametrosEnCabecera(queryable);
+            //buscar generos por nombre
+            var generos = queryable.OrderBy(x => x.Nombre).Paginar(paginacionDTO).ToListAsync();
             return mapper.Map<List<GeneroDTO>>(generos);
         }
         [HttpGet("{Id:int}")]
