@@ -20,7 +20,7 @@ namespace PeliculasAPI.Controllers
     [Route("api/generos")]
     [ApiController]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]//proteccion 401 unauthorized a nivel de controller
-    public class GenerosController : Controller
+    public class GenerosController : ControllerBase
     {
         private readonly ILogger<GenerosController> loguer;
         private readonly ApplicationDbContext context;
