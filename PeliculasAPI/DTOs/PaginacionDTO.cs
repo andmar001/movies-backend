@@ -3,18 +3,18 @@
     public class PaginacionDTO
     {
         public int Pagina { get; set; } = 1;
-        private int recordsPorPAgina = 10;
-        private readonly int cantidadMaximaPorPagina = 50;
+        private int recordsPorPagina = 10;
+        private readonly int cantidadMaximaRecordsPorPagina = 50;
         public int RecordsPorPagina
         {
             get
             {
-                return recordsPorPAgina;
+                return recordsPorPagina;
             }
             set 
             {
                 //validacion para que no supere 50 registros por página
-                recordsPorPAgina = (value > cantidadMaximaPorPagina) ? cantidadMaximaPorPagina:value ; 
+                recordsPorPagina = (value > cantidadMaximaRecordsPorPagina) ? cantidadMaximaRecordsPorPagina : value ; 
             }
         }
     }
