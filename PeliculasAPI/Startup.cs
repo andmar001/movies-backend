@@ -37,7 +37,10 @@ namespace PeliculasAPI
             //configuración de automapper
             services.AddAutoMapper(typeof(Startup));
             //interfaz de almacenamiento
-            services.AddTransient<IAlmacenadorAzureStorage, AlmacenadorAzureStorage>();
+            //services.AddTransient<IAlmacenadorArchivos, AlmacenadorAzureStorage>();  // almacenamiento en la nube
+            services.AddTransient<IAlmacenadorArchivos, AlmacenadorArchivosLocal>(); // almacenamiento local
+
+            services.AddHttpContextAccessor(); // para poder acceder al contexto de la peticion http
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer( Configuration.GetConnectionString("defaultConnection")));
@@ -89,6 +92,8 @@ namespace PeliculasAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles(); //para usar archivos estaticos
 
             app.UseRouting();
 

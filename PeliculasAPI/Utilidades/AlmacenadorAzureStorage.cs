@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PeliculasAPI.Utilidades
 {
-    public class AlmacenadorAzureStorage : IAlmacenadorAzureStorage
+    public class AlmacenadorAzureStorage : IAlmacenadorArchivos
     {
         private string connectionString;
         public AlmacenadorAzureStorage(IConfiguration configuration)

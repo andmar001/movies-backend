@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace PeliculasAPI.Utilidades
 {
-    public interface IAlmacenadorAzureStorage
+    public interface IAlmacenadorArchivos
     {
         Task BorrarArchivo(string ruta, string contenedor);
         Task<string> EditarArchivo(string contenedor, IFormFile archivo, string ruta);
