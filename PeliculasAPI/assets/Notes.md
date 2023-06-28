@@ -36,3 +36,6 @@ Update-Database
 
 # Automapper
 paquete - AutoMapper.Extensions.Microsoft.DependencyInjection
+# Azure Account - Servicios en la nube
+Video 101. Crear cuenta en azure
+paquete nugget - Azure.Storage.Blobs

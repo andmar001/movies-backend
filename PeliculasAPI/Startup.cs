@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PeliculasAPI.Controllers;
 using PeliculasAPI.Filtros;
+using PeliculasAPI.Utilidades;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +36,8 @@ namespace PeliculasAPI
         {
             //configuración de automapper
             services.AddAutoMapper(typeof(Startup));
+            //interfaz de almacenamiento
+            services.AddTransient<IAlmacenadorAzureStorage, AlmacenadorAzureStorage>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer( Configuration.GetConnectionString("defaultConnection")));
