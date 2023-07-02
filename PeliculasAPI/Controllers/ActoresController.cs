@@ -43,7 +43,6 @@ namespace PeliculasAPI.Controllers
             await context.SaveChangesAsync();
             return NoContent();
         }
-
         [HttpGet]
         public async Task<ActionResult<List<ActorDTO>>> Get([FromQuery] PaginacionDTO paginacionDTO)
         {
@@ -52,19 +51,48 @@ namespace PeliculasAPI.Controllers
             var actores = await queryable.Paginar(paginacionDTO).ToListAsync();
             return mapper.Map<List<ActorDTO>>(actores);
         }
-
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int Id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<ActorDTO>> Get(int id)
         {
-            var existe = await context.Actores.AnyAsync(x => x.Id == Id);
-
-            if (!existe)
+            var actor = await context.Actores.FirstOrDefaultAsync(x => x.Id == id);
+            if (actor == null)
             {
                 return NotFound();
             }
-
-            context.Remove(new Genero() { Id = Id });
+            return mapper.Map<ActorDTO>(actor);
+        }
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int id,[FromForm] ActorCreacionDTO actorCreacionDTO)
+        {
+            var actor = await context.Actores.FirstOrDefaultAsync(x => x.Id == id);
+            if (actor == null)
+            {
+                return NotFound();
+            }
+            
+            actor = mapper.Map(actorCreacionDTO, actor);
+            
+            if (actorCreacionDTO.Foto != null)
+            {
+                actor.Foto = await almacenadorArchivos.EditarArchivo(contenedor, actorCreacionDTO.Foto, actor.Foto);
+            }
             await context.SaveChangesAsync();
+            return NoContent();
+        }
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int Id)
+        {
+            var actor = await context.Actores.FirstOrDefaultAsync(x => x.Id == Id);
+            
+            if (actor == null)
+            {
+                return NotFound();
+            }
+            context.Remove(actor);
+            await context.SaveChangesAsync();
+
+            await almacenadorArchivos.BorrarArchivo(actor.Foto, contenedor);
+
             return NoContent();
         }
 

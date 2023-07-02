@@ -50,12 +50,12 @@ namespace PeliculasAPI
             {
                 options.AddDefaultPolicy(builder =>
                 {
+                    //con origenes especificos, configurados en el appsettings.json
                     var frontendURL = Configuration.GetValue<string>("frontend_url");
-                    //builder.WithOrigins("*")
                     builder.WithOrigins(frontendURL)
                         .AllowAnyMethod()
                         .AllowAnyHeader()
-                        .WithExposedHeaders( new string[] { "cantidadTotalRegistros" });//exponer la cabecera usada para hacer la paginación                   
+                        .WithExposedHeaders(new string[] { "cantidadTotalRegistros" });//exponer la cabecera usada para hacer la paginación                   
                 });
             });
 
