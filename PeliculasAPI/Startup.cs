@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using PeliculasAPI.Controllers;
 using PeliculasAPI.Filtros;
 using PeliculasAPI.Utilidades;
@@ -36,6 +38,17 @@ namespace PeliculasAPI
         {
             //configuración de automapper
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddSingleton(provider =>
+                new MapperConfiguration(config =>
+                {
+                    var geometryFactory = provider.GetRequiredService<GeometryFactory>();
+                    config.AddProfile(new AutoMapperProfiles(geometryFactory));
+                }).CreateMapper()
+            );
+
+            services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326)); //srid:4326 usado para mediciones en planeta tierra
+
             //interfaz de almacenamiento
             //services.AddTransient<IAlmacenadorArchivos, AlmacenadorAzureStorage>();  // almacenamiento en la nube
             services.AddTransient<IAlmacenadorArchivos, AlmacenadorArchivosLocal>(); // almacenamiento local
@@ -43,8 +56,9 @@ namespace PeliculasAPI
             services.AddHttpContextAccessor(); // para poder acceder al contexto de la peticion http
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer( Configuration.GetConnectionString("defaultConnection")));
-            
+                options.UseSqlServer( Configuration.GetConnectionString("defaultConnection"),
+                sqlServer => sqlServer.UseNetTopologySuite())); //activar paquetes de nettopologysuite para mapas
+
             //configuración de CORS
             services.AddCors(options =>
             {

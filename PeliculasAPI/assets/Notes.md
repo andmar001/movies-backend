@@ -39,3 +39,8 @@ paquete - AutoMapper.Extensions.Microsoft.DependencyInjection
 # Azure Account - Servicios en la nube
 Video 101. Crear cuenta en azure
 paquete nugget - Azure.Storage.Blobs
+
+# Para guardar la ubicacion, uso de libreria 
+- Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite
+
+
