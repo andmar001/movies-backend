@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PeliculasAPI.DTOs;
 using PeliculasAPI.Entidades;
 using PeliculasAPI.Utilidades;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PeliculasAPI.Controllers
@@ -41,5 +43,30 @@ namespace PeliculasAPI.Controllers
             await context.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpGet]
+        public async Task<ActionResult<List<ActorDTO>>> Get([FromQuery] PaginacionDTO paginacionDTO)
+        {
+            var queryable = context.Actores.AsQueryable();
+            await HttpContext.InsertarParametrosPaginacionEnCabecera(queryable);
+            var actores = await queryable.Paginar(paginacionDTO).ToListAsync();
+            return mapper.Map<List<ActorDTO>>(actores);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int Id)
+        {
+            var existe = await context.Actores.AnyAsync(x => x.Id == Id);
+
+            if (!existe)
+            {
+                return NotFound();
+            }
+
+            context.Remove(new Genero() { Id = Id });
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
+
     }
 }
