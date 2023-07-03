@@ -24,6 +24,18 @@ namespace PeliculasAPI.Controllers
             this.mapper = mapper;
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<CineDTO>> Get(int id)
+        {
+            var cine = await context.Cines.FirstOrDefaultAsync(x => x.Id == id);
+            if (cine == null)
+            {
+                return NotFound();
+            }
+
+            return mapper.Map<CineDTO>(cine);
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<CineDTO>>> Get([FromQuery] PaginacionDTO paginacionDTO)
         {
@@ -36,10 +48,24 @@ namespace PeliculasAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody]CineCreacionDTO cineCreacionDTO)
+        public async Task<ActionResult> Post([FromBody] CineCreacionDTO cineCreacionDTO)
         {
             var cine = mapper.Map<Cine>(cineCreacionDTO);
             context.Add(cine);
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult>Put(int id, [FromBody] CineCreacionDTO cineCreacionDTO)
+        {
+            var cine = await context.Cines.FirstOrDefaultAsync(x => x.Id == id);
+            if (cine == null)
+            {
+                return NotFound();
+            }
+
+            cine = mapper.Map(cineCreacionDTO, cine);
             await context.SaveChangesAsync();
             return NoContent();
         }
