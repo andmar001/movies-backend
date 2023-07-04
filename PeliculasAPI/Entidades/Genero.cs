@@ -1,4 +1,5 @@
 ﻿using PeliculasAPI.Validaciones;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PeliculasAPI.Entidades
@@ -6,9 +7,11 @@ namespace PeliculasAPI.Entidades
     public class Genero
     {
         public int Id { get; set; }
-        [Required(ErrorMessage ="El campo {0} es requerido")]
-        [StringLength(maximumLength:50)]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        [StringLength(maximumLength: 50)]
         [PrimeraLetraMayuscula]
         public string Nombre { get; set; }
+        // relaciones
+        public List<PeliculasGeneros> PeliculasGeneros { get; set; }
     }
 }
