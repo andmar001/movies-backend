@@ -43,4 +43,8 @@ paquete nugget - Azure.Storage.Blobs
 # Para guardar la ubicacion, uso de libreria 
 - Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite
 
+# IModelBinder ------ TypeBinder
+- permite crear un modelo personalizado para el binding de los datos, se puede usar para validar los datos que se reciben en el endpoint
+- se debe de crear una clase que herede de IModelBinder
+- por ejemplo, se puede crear un modelo que reciba un string y lo convierta a un objeto de tipo Guid
 
