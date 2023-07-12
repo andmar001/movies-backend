@@ -48,3 +48,15 @@ paquete nugget - Azure.Storage.Blobs
 - se debe de crear una clase que herede de IModelBinder
 - por ejemplo, se puede crear un modelo que reciba un string y lo convierta a un objeto de tipo Guid
 
+# para poder recivir la imagen desde el cliente , se debe de usar el tipo de dato IFormFile
+- se usa [FromForm] para indicar que se recibe desde el formulario
+
+
+
+
+
+
+
+
+
+# ! no olvidar corregir tabla de PeliculasActores, no se hace correctamente la inserción de personaje

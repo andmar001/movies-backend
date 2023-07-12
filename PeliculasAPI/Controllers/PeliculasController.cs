@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PeliculasAPI.DTOs;
 using PeliculasAPI.Entidades;
 using PeliculasAPI.Utilidades;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PeliculasAPI.Controllers
@@ -43,6 +45,17 @@ namespace PeliculasAPI.Controllers
 
             await context.SaveChangesAsync();
             return NoContent();
+        }
+        [HttpGet("PostGet")]
+        public async Task<ActionResult<PeliculaPostGetDTO>> PostGet()
+        {
+            var cines = await context.Cines.ToListAsync();
+            var generos = await context.Generos.ToListAsync();
+
+            var cinesDTO = mapper.Map<List<CineDTO>>(cines);
+            var generosDTO = mapper.Map<List<GeneroDTO>>(generos);
+
+            return new PeliculaPostGetDTO() { Cines = cinesDTO, Generos = generosDTO };
         }
 
         private void EscribirOrdenActores(Pelicula pelicula)

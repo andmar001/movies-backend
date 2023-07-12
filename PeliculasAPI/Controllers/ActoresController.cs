@@ -5,6 +5,7 @@ using PeliculasAPI.DTOs;
 using PeliculasAPI.Entidades;
 using PeliculasAPI.Utilidades;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PeliculasAPI.Controllers
@@ -43,6 +44,19 @@ namespace PeliculasAPI.Controllers
             await context.SaveChangesAsync();
             return NoContent();
         }
+        [HttpPost("buscarPorNombre")]
+        public async Task<ActionResult<List<PeliculaActorDTO>>> BuscarPorNombre([FromBody] string nombre)
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+                return new List<PeliculaActorDTO>();
+
+            return await context.Actores
+                .Where(x => x.Nombre.Contains(nombre))
+                .Select(x => new PeliculaActorDTO() { Id = x.Id, Nombre = x.Nombre, Foto = x.Foto })
+                .Take(5) //solo traer 5 registros
+                .ToListAsync();
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<ActorDTO>>> Get([FromQuery] PaginacionDTO paginacionDTO)
         {

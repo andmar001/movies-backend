@@ -18,11 +18,12 @@ namespace PeliculasAPI.DTOs
         public string EnCines { get; set; }
         public DateTime FechaLanzamiento { get; set; }
         public IFormFile Poster { get; set; }
-        [ModelBinder(binderType:typeof(TypeBinder<List<int>>))] // para que el model binder sepa que es una lista de enteros
+
+        [ModelBinder(BinderType = typeof(TypeBinder<List<int>>))] // para que el model binder sepa que es una lista de enteros
         public List<int> GenerosIds { get; set; }
-        [ModelBinder(binderType: typeof(TypeBinder<List<int>>))] // para que el model binder sepa que es una lista de enteros
+        [ModelBinder(BinderType = typeof(TypeBinder<List<int>>))] // para que el model binder sepa que es una lista de enteros
         public List<int> CinesIds { get; set; }
-        [ModelBinder(binderType: typeof(TypeBinder<List<ActorPeliculaCreacionDTO>>))] // para que el model binder sepa que es una lista de ActorPeliculaCreacionDTO
+        [ModelBinder(BinderType = typeof(TypeBinder<List<ActorPeliculaCreacionDTO>>))] // para que el model binder sepa que es una lista de ActorPeliculaCreacionDTO
         public List<ActorPeliculaCreacionDTO> Actores { get; set; }
     }
 }

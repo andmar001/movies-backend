@@ -90,8 +90,8 @@ namespace PeliculasAPI.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("EnCines")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("EnCines")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaLanzamiento")
                         .HasColumnType("datetime2");

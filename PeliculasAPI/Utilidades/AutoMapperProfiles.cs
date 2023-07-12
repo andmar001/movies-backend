@@ -26,7 +26,7 @@ namespace PeliculasAPI.Utilidades
                 .ForMember(x => x.Longitud, dto => dto.MapFrom(campo => campo.Ubicacion.X));
 
             CreateMap<PeliculaCreacionDTO, Pelicula>()
-                .ForMember(x => x.Poster, options => options.Ignore())
+                .ForMember(x => x.Poster, options => options.Ignore())  //Poster es ignorada en la creacion, porque se crea en otro metodo
                 .ForMember(x => x.PeliculasGeneros, options => options.MapFrom(MapearPeliculasGeneros))
                 .ForMember(x => x.PeliculasCines, options => options.MapFrom(MapearPeliculasCines))
                 .ForMember(x => x.PeliculasActores, options => options.MapFrom(MapearPeliculasActores));
