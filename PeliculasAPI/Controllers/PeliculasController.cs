@@ -28,6 +28,7 @@ namespace PeliculasAPI.Controllers
             this.mapper = mapper;
             this.almacenadorArchivos = almacenadorArchivos;
         }
+        // ver el detalle completo de la pelicula
         [HttpGet("{id:int}")]
         public async Task<ActionResult<PeliculaDTO>>Get(int id)
         {

@@ -475,3 +475,10 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Imagenes en formato png, jpg, jpeg, gif, svg
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
