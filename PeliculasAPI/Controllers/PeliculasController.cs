@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PeliculasAPI.DTOs;
 using PeliculasAPI.Entidades;
 using PeliculasAPI.Utilidades;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +29,33 @@ namespace PeliculasAPI.Controllers
             this.mapper = mapper;
             this.almacenadorArchivos = almacenadorArchivos;
         }
+
+        [HttpGet]
+        public async Task<ActionResult<LandingPageDTO>> Get()
+        {
+            var top = 6;
+            var hoy = DateTime.Today;
+
+            var proximosEstrenos = await context.Peliculas
+                .Where(x => x.FechaLanzamiento > hoy)
+                .OrderBy(x => x.FechaLanzamiento)
+                .Take(top)  // toma los primeros 6
+                .ToListAsync();
+
+            var enCines = await context.Peliculas
+                .Where(x => x.EnCines)
+                .OrderBy(x => x.FechaLanzamiento)
+                .Take(top)  // toma los primeros 6
+                .ToListAsync();
+
+            var resultado = new LandingPageDTO();
+
+            resultado.ProximosEstrenos = mapper.Map<List<PeliculaDTO>>(proximosEstrenos);
+            resultado.EnCines = mapper.Map<List<PeliculaDTO>>(enCines);
+            
+            return resultado;
+        }
+
         // ver el detalle completo de la pelicula
         [HttpGet("{id:int}")]
         public async Task<ActionResult<PeliculaDTO>>Get(int id)
