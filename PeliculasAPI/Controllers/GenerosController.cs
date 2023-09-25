@@ -46,6 +46,15 @@ namespace PeliculasAPI.Controllers
             var generos = await queryable.OrderBy(x => x.Nombre).Paginar(paginacionDTO).ToListAsync();
             return mapper.Map<List<GeneroDTO>>(generos);
         }
+
+        [HttpGet("todos")]
+        public async Task<ActionResult<List<GeneroDTO>>> Todos()
+        {
+            var generos = await context.Generos.ToListAsync();
+            return mapper.Map<List<GeneroDTO>>(generos);
+        }
+
+
         [HttpGet("{Id:int}")]
         public async Task<ActionResult<GeneroDTO>> GetById(int Id)
         {
