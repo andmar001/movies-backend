@@ -51,11 +51,19 @@ paquete nugget - Azure.Storage.Blobs
 # para poder recivir la imagen desde el cliente , se debe de usar el tipo de dato IFormFile
 - se usa [FromForm] para indicar que se recibe desde el formulario
 
+# Autenticacion
+- se debe de crear un modelo que reciba el usuario y la contraseña
+- la autenticacion se trata de que un usuario muestre sus credenciales para verificar su identidad
 
+# Identity
+- es un sistema de autenticacion que ya viene implementado en .net core- Microsoft.AspNetCore.Identity.EntityFrameworkCore	
 
+# json web token
+- es un token que se genera para poder autenticar a un usuario
 
-
-
+# clims
+- son los datos que se guardan en el token
+- se pueden guardar datos como el id del usuario, el nombre, el rol, etc
 
 
 

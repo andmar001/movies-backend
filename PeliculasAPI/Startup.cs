@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
@@ -20,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace PeliculasAPI
@@ -72,6 +75,27 @@ namespace PeliculasAPI
                         .WithExposedHeaders(new string[] { "cantidadTotalRegistros" });//exponer la cabecera usada para hacer la paginación                   
                 });
             });
+
+            //configuración de autenticación
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            //configuración de autenticación con JWT
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opciones =>
+                {
+                    opciones.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false, //validar el emisor
+                        ValidateAudience = false, //validar el receptor
+                        ValidateLifetime = true, //validar el tiempo de vida
+                        ValidateIssuerSigningKey = true, //validar la firma
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                                                       Encoding.UTF8.GetBytes(Configuration["llavejwt"])),
+                        ClockSkew = TimeSpan.Zero //tiempo de expiración
+                    };
+                });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
             //configurar filtro de accion
