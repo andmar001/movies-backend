@@ -97,7 +97,6 @@ namespace PeliculasAPI
                     };
                 });
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
             //configurar filtro de accion
             services.AddTransient<MiFiltroDeAccion>();
             services.AddControllers(options =>
