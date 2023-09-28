@@ -73,7 +73,7 @@ namespace PeliculasAPI.Controllers
             claims.AddRange(claimsDB);
 
             var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["llavejwt"]));
-            var creds = new SigningCredentials(llave, SecurityAlgorithms.Sha256);
+            var creds = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
 
             var expiracion = DateTime.UtcNow.AddYears(1);
 
