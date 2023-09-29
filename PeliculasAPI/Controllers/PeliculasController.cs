@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -15,24 +18,29 @@ namespace PeliculasAPI.Controllers
 {
     [ApiController]
     [Route("api/peliculas")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PeliculasController : ControllerBase
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
         private readonly IAlmacenadorArchivos almacenadorArchivos;
+        private readonly UserManager<IdentityUser> userManager;
         private readonly string contenedor = "peliculas";
 
         public PeliculasController(
             ApplicationDbContext context,
             IMapper mapper,
-            IAlmacenadorArchivos almacenadorArchivos)
+            IAlmacenadorArchivos almacenadorArchivos,
+            UserManager<IdentityUser> userManager)
         {
             this.context = context;
             this.mapper = mapper;
             this.almacenadorArchivos = almacenadorArchivos;
+            this.userManager = userManager;
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<LandingPageDTO>> Get()
         {
             var top = 6;
@@ -60,6 +68,7 @@ namespace PeliculasAPI.Controllers
 
         // ver el detalle completo de la pelicula
         [HttpGet("{id:int}")]
+        [AllowAnonymous]
         public async Task<ActionResult<PeliculaDTO>>Get(int id)
         {
             var pelicula = await context.Peliculas
@@ -72,8 +81,34 @@ namespace PeliculasAPI.Controllers
             {
                 return NotFound();
             }
+            var promedioVoto = 0.0;
+            var usuarioVoto = 0;
+
+            if (await context.Ratings.AnyAsync(x => x.PeliculaId == id)) 
+            {
+                //Calcular el promedio de los votos
+                promedioVoto = await context.Ratings.Where(x => x.PeliculaId == id)
+                    .AverageAsync(x => x.Puntuacion);
+
+                if (HttpContext.User.Identity.IsAuthenticated)
+                {
+                    var email = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "email").Value;
+                    var usuario = await userManager.FindByEmailAsync(email);
+                    var usuarioId = usuario.Id;
+
+                    var ratingDB = await context.Ratings
+                        .FirstOrDefaultAsync(x => x.UsuarioId == usuarioId && x.PeliculaId == id);
+
+                    if (ratingDB != null)
+                    {
+                        usuarioVoto = ratingDB.Puntuacion;
+                    }
+                }
+            }
             //mapeo de la entidad Pelicula hacia PeliculaDTO
             var dto = mapper.Map<PeliculaDTO>(pelicula);
+            dto.VotoUsuario = usuarioVoto;
+            dto.PromedioVoto = promedioVoto;
             dto.Actores = dto.Actores.OrderBy(x => x.Orden).ToList();
 
             return dto;
@@ -87,6 +122,7 @@ namespace PeliculasAPI.Controllers
         }
 
         [HttpGet("filtrar")]
+        [AllowAnonymous]
         public async Task<ActionResult<List<PeliculaDTO>>> Filtrar([FromQuery] PeliculasFiltrarDTO peliculasFiltrarDTO)
         {
             var peliculasQueryable = context.Peliculas.AsQueryable();
