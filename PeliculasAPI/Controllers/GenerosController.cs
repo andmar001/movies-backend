@@ -19,6 +19,7 @@ namespace PeliculasAPI.Controllers
 {
     [Route("api/generos")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]//proteccion 401 unauthorized a nivel de controller
     public class GenerosController : ControllerBase
     {
@@ -48,6 +49,7 @@ namespace PeliculasAPI.Controllers
         }
 
         [HttpGet("todos")]
+        [AllowAnonymous]
         public async Task<ActionResult<List<GeneroDTO>>> Todos()
         {
             var generos = await context.Generos.ToListAsync();

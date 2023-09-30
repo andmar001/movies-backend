@@ -99,6 +99,12 @@ namespace PeliculasAPI
                     };
                 });
 
+            //configuración de claims para el usuario - roles
+            services.AddAuthorization(opciones =>
+            {
+                opciones.AddPolicy("EsAdmin", policy => policy.RequireClaim("role", "admin"));
+            });
+
             //configurar filtro de accion
             services.AddTransient<MiFiltroDeAccion>();
             services.AddControllers(options =>
